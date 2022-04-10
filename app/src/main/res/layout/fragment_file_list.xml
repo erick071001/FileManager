@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.listAllFile.FileListFragment">
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <TextView
+        android:id="@+id/txt_no_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No File"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/txt_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="212dp"
+        android:text="All Files"
+        android:fontFamily="@font/dmsans_bold"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:paddingStart="50dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
+    <ImageView
+        android:id="@+id/img_layout_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_grid_on"
+        app:layout_constraintRight_toLeftOf="@+id/img_sort"
+        android:layout_marginRight="10dp"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <ImageView
+        android:id="@+id/img_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_sort"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_all_file"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_category"
+        app:layout_constraintBottom_toTopOf="@id/menu"
+        tools:listitem="@layout/item_file"
+        android:visibility="gone"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_add_folder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:drawableTop="@drawable/ic_add_folder"
+        android:background="@android:color/transparent"/>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/menu"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/bottom_menu"
+        android:weightSum="5"
+        android:visibility="gone">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/btn_copy"
+            android:layout_marginTop="10dp"
+            android:text="copy"
+            android:drawableTop="@drawable/ic_copy"
+            android:background="@android:color/transparent"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/btn_cut"
+            android:layout_marginTop="10dp"
+            android:text="cut"
+            android:drawableTop="@drawable/ic_cut"
+            android:background="@android:color/transparent"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/btn_paste"
+            android:layout_marginTop="10dp"
+            android:drawableTop="@drawable/ic_paste"
+            android:text="paste"
+            android:background="@android:color/transparent"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/btn_share"
+            android:layout_marginTop="10dp"
+            android:text="share"
+            android:drawableTop="@drawable/ic_share"
+            android:background="@android:color/transparent"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/btn_close"
+            android:layout_marginTop="10dp"
+            android:text="close"
+            android:drawableTop="@drawable/ic_close"
+            android:background="@android:color/transparent"
+            android:visibility="gone"
+
+            />
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/btn_delete"
+            android:layout_marginTop="10dp"
+            android:text="del"
+            android:drawableTop="@drawable/ic_delete"
+            android:background="@android:color/transparent"
+            />
+
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/img_new_dir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_icon"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:fontFamily="@font/dmsans_bold"
+            android:text="Create new folder"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@id/img_new_dir"
+            app:layout_constraintLeft_toRightOf="@id/img_new_dir"
+            app:layout_constraintTop_toTopOf="@id/img_new_dir" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edt_dir_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/edt_bg"
+            android:fontFamily="@font/dmsans_regular"
+            android:hint="Directory's Name"
+            android:padding="10dp"
+            android:textSize="13sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_new_dir" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_style_3"
+            android:fontFamily="@font/dmsans_bold"
+            android:text="Cancle"
+            android:textAllCaps="false"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_dir_name" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="500dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_style_2"
+            android:fontFamily="@font/dmsans_bold"
+            android:text="Create"
+            android:textAllCaps="false"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_dir_name" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
