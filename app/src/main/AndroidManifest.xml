@@ -30,6 +30,7 @@
         <activity
             android:name=".activity.FolderDetailActivity"
             android:exported="true" />
+
         <activity
             android:name=".activity.SplashActivity"
             android:exported="true">
