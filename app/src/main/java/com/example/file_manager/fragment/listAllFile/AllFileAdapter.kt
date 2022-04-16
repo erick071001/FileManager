@@ -14,7 +14,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.example.file_manager.BuildConfig
-import com.example.file_manager.BuildConfig.APPLICATION_ID
 import com.example.file_manager.common.Constant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -23,7 +22,6 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.StandardCopyOption
 
 
 class AllFileAdapter(private val context: Context, private var onItemClick: (String) -> Unit)

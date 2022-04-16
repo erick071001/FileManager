@@ -1,18 +1,11 @@
 package com.example.file_manager.fragment.listAllFile
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.file_manager.BuildConfig
 import com.example.file_manager.common.Constant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,7 +16,7 @@ import kotlin.collections.ArrayList
 object FileListViewModel : ViewModel() {
     var typeOfFolder = "other"
     val stackPath = Stack<String>()
-    val stackLastItemDisplay = Stack<Int>()
+
     private val _files: MutableLiveData< ArrayList<File> > = MutableLiveData()
     val files: LiveData<ArrayList<File>> = _files
 
