@@ -237,7 +237,7 @@ class AllFileAdapter(private val context: Context, private var onItemClick: (Str
             }
         }
     }
-
+    //Kiểm tra tên file s có chứa đuôi mở rộng nào trong danh sách extend không
     private suspend fun checkIfFileHasExtension(s: String, extend: MutableList<String>): Boolean {
         return withContext(Dispatchers.IO){
             extend.forEach {

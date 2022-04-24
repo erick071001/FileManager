@@ -18,7 +18,9 @@ class FolderDetailActivity : AppCompatActivity() {
 
         intent.getStringExtra("typefolder")?.let{
             FileListViewModel.updateTypeOfFolder(it)
-            binding.tvHeader.text = it.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            binding.tvHeader.text = it.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+            }
         }
 
     }

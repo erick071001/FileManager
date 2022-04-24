@@ -1,5 +1,5 @@
 package com.example.file_manager.common
-
+//Class lưu hằng cấu trúc đuôi file dữ liệu
 object Constant {
     var musicEx = mutableListOf(".mp3", ".wav")
     var videoEx = mutableListOf(".mp4", ".avi", ".mpe")

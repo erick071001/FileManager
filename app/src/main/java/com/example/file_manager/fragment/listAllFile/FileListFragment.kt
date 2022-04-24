@@ -1,5 +1,7 @@
 package com.example.file_manager.fragment.listAllFile
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,7 +11,9 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.file_manager.CreateFolderDialog
 import com.example.file_manager.R
+import com.example.file_manager.SortByDialog
 import com.example.file_manager.activity.FolderDetailActivity
 import com.example.file_manager.inf.OnBackPressed
 import com.example.file_manager.databinding.FragmentFileListBinding
@@ -50,20 +54,12 @@ class FileListFragment : Fragment(), OnBackPressed {
             binding.btnAddFolder.visibility = View.GONE
         }
 
-
-
-
         val adapter = AllFileAdapter(requireContext()){
             FileListViewModel.openFolder(it)
         }
 
-
-
-        /**
-         setting class handle menu mode
-         **/
-
         adapter.setHandleMenuMode(object :ClassHandleMenuMode(){
+            //Set giao diện MenuMode kkhi bật và tắt
             override fun changeMenuMode(mode: MenuMode) {
                 if(mode == MenuMode.OPEN)
                 {
@@ -95,36 +91,63 @@ class FileListFragment : Fragment(), OnBackPressed {
                 }
             }
         })
-
+        //setOnClick các nút
         binding.btnCopy.setOnClickListener{
             FileListViewModel.copy()
             setPasteMode()
         }
-
         binding.btnPaste.setOnClickListener {
             FileListViewModel.paste()
             setOpenMode()
         }
-
         binding.btnCut.setOnClickListener{
             FileListViewModel.cut()
             setPasteMode()
         }
-
         binding.btnClose.setOnClickListener{
             setOpenMode()
             FileListViewModel.selectedFile = File("")
             binding.rcvAllFile.adapter?.notifyDataSetChanged()
         }
+        binding.btnDelete.setOnClickListener{
 
+            val dialogBuilder = AlertDialog.Builder(context)
+            dialogBuilder.setMessage("Do you want to delete this folder ?")
+                .setCancelable(false)
+                .setPositiveButton("Delete", DialogInterface.OnClickListener {
+                        dialog, id -> FileListViewModel.delete()
+                    setOpenMode()
+                })
+                .setNegativeButton("Cancel", DialogInterface.OnClickListener {
+                        dialog, id ->
+                    FileListViewModel.selectedFile = File("")
+                    setOpenMode()
+                    dialog.cancel()
+                })
 
-
-
+            val alert = dialogBuilder.create()
+            alert.setTitle("Delete folder")
+            alert.show()
+        }
+        binding.btnShare.setOnClickListener {
+            context?.let {
+                FileListViewModel.share(it)
+            }
+        }
+        binding.btnAddFolder.setOnClickListener {
+            val createFolderDialog = CreateFolderDialog()
+            createFolderDialog.show(parentFragmentManager, "create folder" )
+        }
+        binding.imgSort.setOnClickListener {
+            val sortByDialog = SortByDialog()
+            sortByDialog.show(parentFragmentManager, "sort")
+        }
+        //set Adapter cho recyclerview
         binding.rcvAllFile.layoutManager = listLayout
-
         binding.rcvAllFile.adapter = adapter
         FileListViewModel.files.observe(viewLifecycleOwner){
             adapter.listFile = it
+            //kiểm tra folder có trống không, trống hiện textView "NoFlie"
             if (it.isNotEmpty()){
                 Timber.d("It has files")
                 FileListViewModel.changeStateLoading()
@@ -142,7 +165,7 @@ class FileListFragment : Fragment(), OnBackPressed {
         }
 
         (activity as FolderDetailActivity).onBackPressed = this
-
+        // sét chế độ hiện thị hiện dạng list hay dạng lưới
         binding.imgLayoutChange.setOnClickListener{
             FileListViewModel.changeLayout()
             FileListViewModel.isGrid.observe(viewLifecycleOwner){
@@ -158,6 +181,7 @@ class FileListFragment : Fragment(), OnBackPressed {
                 }
             }
         }
+        //animation loading
         FileListViewModel.stateLoading.observe(viewLifecycleOwner){
             if (it){
                 binding.loading.visibility = View.VISIBLE
@@ -166,7 +190,7 @@ class FileListFragment : Fragment(), OnBackPressed {
             }
         }
     }
-
+    //override hàm onClick của interface OnBackPressed xử lý event back của Device
     override fun onClick() {
         Timber.d("Clicked back")
         if(FileListViewModel.menuMode == MenuMode.SELECT)
@@ -181,7 +205,7 @@ class FileListFragment : Fragment(), OnBackPressed {
             FileListViewModel.onBackPressed()
         }
     }
-
+    //override hàm isClosed của interface OnBackPressed xử lý event back của Device
     override fun isClosed(): Boolean {
         if (FileListViewModel.isRoot()){
             if( FileListViewModel.menuMode == MenuMode.OPEN) {
@@ -197,7 +221,7 @@ class FileListFragment : Fragment(), OnBackPressed {
 
         return false
     }
-
+    //Chế độ mở file
     fun setOpenMode()
     {
         binding.menu.visibility = View.GONE
@@ -205,13 +229,12 @@ class FileListFragment : Fragment(), OnBackPressed {
         binding.btnAddFolder.visibility = View.VISIBLE
         binding.rcvAllFile.adapter?.notifyDataSetChanged()
     }
-
+    // chế độ paste File
     fun setPasteMode()
     {
         binding.menu.visibility = View.VISIBLE
         FileListViewModel.menuMode = MenuMode.PASTE
         binding.btnAddFolder.visibility = View.GONE
-
         binding.btnCut.visibility = View.INVISIBLE
         binding.btnCopy.visibility = View.GONE
         binding.btnShare.visibility = View.GONE

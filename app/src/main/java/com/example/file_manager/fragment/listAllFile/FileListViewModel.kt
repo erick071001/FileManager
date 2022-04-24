@@ -1,11 +1,18 @@
 package com.example.file_manager.fragment.listAllFile
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.file_manager.BuildConfig
 import com.example.file_manager.common.Constant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +23,6 @@ import kotlin.collections.ArrayList
 object FileListViewModel : ViewModel() {
     var typeOfFolder = "other"
     val stackPath = Stack<String>()
-
     private val _files: MutableLiveData< ArrayList<File> > = MutableLiveData()
     val files: LiveData<ArrayList<File>> = _files
 
@@ -25,11 +31,6 @@ object FileListViewModel : ViewModel() {
 
     private val _stateLoading: MutableLiveData<Boolean> = MutableLiveData()
     val stateLoading: LiveData<Boolean> = _stateLoading
-
-
-    /**
-     Variable copy - paste file
-     **/
     var selectedFile: File? = null
     var currentDictionary: File = File(Constant.path)
     var menuMode: MenuMode = MenuMode.OPEN
@@ -38,23 +39,23 @@ object FileListViewModel : ViewModel() {
     fun isRoot(): Boolean{
         return stackPath.size == 1
     }
-
+    //mở folder con
     fun openFolder(path: String){
         stackPath.push(path)
         currentDictionary = File(stackPath.peek())
         getFiles(path)
     }
-
+    // Lùi lại folder cha
     fun onBackPressed(){
         stackPath.pop()
         currentDictionary= File(stackPath.peek())
         getFiles(stackPath.peek())
     }
-
+    // thay đổi layout
     fun changeLayout(){
         _isGrid.postValue(!isGrid.value!!)
     }
-
+    // lấy tất cả các file
     private fun getFiles(path: String) {
         viewModelScope.launch(Dispatchers.IO){
             val listFiles = ArrayList<File>()
@@ -66,7 +67,7 @@ object FileListViewModel : ViewModel() {
             _files.postValue(listFiles)
         }
     }
-
+    // Chia file theo kiểu dữ liệu
     private fun getSpecificFiles() {
         viewModelScope.launch(Dispatchers.IO){
             val listFiles = ArrayList<File>()
@@ -88,7 +89,7 @@ object FileListViewModel : ViewModel() {
             _files.postValue(specificFiles)
         }
     }
-
+    // trả về danh sách các đuôi tương ứng kiểu file
     private fun ext(typeOfFolder: String): MutableList<String> {
         return when(typeOfFolder){
             "image" ->{
@@ -105,6 +106,7 @@ object FileListViewModel : ViewModel() {
             }
         }
     }
+    //Kiểm tra tên file s có chứa đuôi mở rộng nào trong danh sách extend không
     private fun checkIfFileHasExtension(s: String, extend: MutableList<String>): Boolean {
         extend.forEach {
             if (s.endsWith(it))
@@ -112,19 +114,98 @@ object FileListViewModel : ViewModel() {
             }
         return false
     }
+    //tạo folder mới
+    fun createFolder(folderName: String){
+        viewModelScope.launch(Dispatchers.IO){
+            val newFile = File(currentDictionary, folderName)
+            if (!newFile.exists()){
+                newFile.mkdir()
+                _files.value?.add(newFile)
+                _files.postValue(_files.value)
+            }
+        }
+    }
+    //Sort file theo A đến Z
+    fun sortFileAtoZ(){
+        viewModelScope.launch(Dispatchers.IO){
+            val listFiles = ArrayList<File>()
+            if(isRoot()) {
+                listFiles.addAll(File(Constant.path).listFiles()!!)
+            }
+            else currentDictionary?.let { listFiles.addAll(it.listFiles()) }
+            listFiles.sort()
+            _files.postValue(listFiles)
+        }
+    }
+    //Sort file theo Z đến A
+    fun sortFileZtoA(){
+        viewModelScope.launch(Dispatchers.IO){
+            val listFiles = ArrayList<File>()
+            if(isRoot()) {
+                listFiles.addAll(File(Constant.path).listFiles()!!)
+            }
+            else currentDictionary?.let { listFiles.addAll(it.listFiles()) }
+            listFiles.sort()
+            listFiles.reverse()
+            _files.postValue(listFiles)
+        }
+    }
+    //Sort file theo thời gian sớm nhất
+    fun sortFileEarliest(){
+        viewModelScope.launch(Dispatchers.IO){
+            val listFiles = ArrayList<File>()
+            if(isRoot()) {
+                listFiles.addAll(File(Constant.path).listFiles()!!)
+            }
+            else currentDictionary?.let { listFiles.addAll(it.listFiles()) }
+            listFiles.sortBy {
+                it.lastModified()
+            }
+            _files.postValue(listFiles)
+        }
+    }
+    //Sort file theo thời gian gần nhất
+    fun sortFileLatest(){
+        viewModelScope.launch(Dispatchers.IO){
+            val listFiles = ArrayList<File>()
+            if(isRoot()) {
+                listFiles.addAll(File(Constant.path).listFiles()!!)
+            }
+            else currentDictionary?.let { listFiles.addAll(it.listFiles()) }
+            listFiles.sortBy {
+                it.lastModified()
+            }
+            listFiles.reverse()
+            _files.postValue(listFiles)
+        }
+    }
+    //share file
+    fun share(context: Context){
+        val shareIntent = Intent().apply{
+            this.action = Intent.ACTION_SEND
+            this.type = "*/*"
+        }
+        val uriFile = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".provider", selectedFile!!)
+        } else{
+            Uri.fromFile(selectedFile!!)
+        }
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uriFile)
+        ContextCompat.startActivity(context, shareIntent, null)
+    }
 
 
-
+    //Chức năng cut
     fun cut()
     {
         handleMode = HandleMode.CUT
     }
-
+    //Chức năng copy
     fun copy()
     {
         handleMode = HandleMode.COPY
     }
-
+    //Chức năng paste
     @RequiresApi(Build.VERSION_CODES.O)
     fun paste()
     {
@@ -169,7 +250,26 @@ object FileListViewModel : ViewModel() {
         handleMode = HandleMode.NONE
     }
 
+    fun delete()
+    {
 
+        val destPath = selectedFile?.absolutePath
+        val destFile = File(destPath)
+        _files.value?.remove(destFile)
+        _files.postValue(_files.value)
+        if(destFile.isDirectory)
+        {
+            destFile.deleteRecursively()
+        }
+        else
+        {
+            destFile.delete()
+        }
+
+        handleMode = HandleMode.NONE
+    }
+
+    // Hiện thị danh sách file theo nhóm
     fun updateTypeOfFolder(type: String){
         stackPath.clear()
         typeOfFolder = type
@@ -186,13 +286,13 @@ object FileListViewModel : ViewModel() {
         stackPath.push(Constant.path)
         getSpecificFiles()
     }
-
+    // animation loading
     fun changeStateLoading(){
         if (_stateLoading.value == true)
             _stateLoading.postValue(false)
 //        else _stateLoading.postValue(true)
     }
-
+    // Xóa danh sách hiện thị file cũ khi đóng or thoat folder
     fun clear(){
         typeOfFolder = "other"
         stackPath.clear()
