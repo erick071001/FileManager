@@ -83,7 +83,9 @@ class HomeActivity : AppCompatActivity() {
                 intent.putExtra("typefolder", "download")
                 startActivity(intent)
             }
-
+            searchBar.setOnClickListener {
+                startActivity(Intent(this@HomeActivity, SearchResultActivity::class.java))
+            }
         }
     }
 

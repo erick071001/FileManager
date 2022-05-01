@@ -203,7 +203,6 @@ object FileListViewModel : ViewModel() {
             val destPath = selectedFile?.absolutePath
             val targetFile = File(targetPath)
             val destFile = File(destPath)
-
             if(!targetFile.exists())
             {
                 if(destFile.isDirectory)
@@ -245,7 +244,7 @@ object FileListViewModel : ViewModel() {
         val destFile = File(destPath)
         _files.value?.remove(destFile)
         _files.postValue(_files.value)
-        if(destFile.isDirectory)
+            if(destFile.isDirectory)
         {
             destFile.deleteRecursively()
         }
